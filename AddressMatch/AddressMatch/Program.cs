@@ -16,7 +16,7 @@ using System.Threading;
 
 namespace AddressMatch
 {
-    class Program
+    public class Program
     {
         static string getHttp(string url, string queryString)
         {
@@ -70,7 +70,7 @@ namespace AddressMatch
             return Regex.Match(addr, @"(?'A'\d+)").Success ? Regex.Match(addr, @"(?'A'\d+)").Result(@"${A}") : "";
         }
 
-        static DataSet AddrMatch(string ak, string city, DataSet ds)
+        public static DataSet AddrMatch(string ak, string city, DataSet ds)
         {
             DataSet dst = new DataSet();
             DataTable dt = new DataTable();

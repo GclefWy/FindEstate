@@ -37,7 +37,7 @@ namespace AddressMatchMain
 
             Console.WriteLine("===== 异步回调 AsyncInvoke =====");
 
-            DSFromT1 = AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT1);
+            DSFromT1 = AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh","上海", DSToT1);
 
             //AddressMatchHandler AMhandler1 = new AddressMatchHandler(AddressMatch.Program.AddrMatch);
             //AddressMatchHandler AMhandler2 = new AddressMatchHandler(AddressMatch.Program.AddrMatch);
@@ -54,8 +54,8 @@ namespace AddressMatchMain
             //DSFromT1 = AMhandler1.EndInvoke(th1result);
             //DSFromT2 = AMhandler2.EndInvoke(th2result);
 
-            var t1 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT1));
-            var t2 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT2));
+            var t1 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", "上海",DSToT1));
+            var t2 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", "上海",DSToT2));
 
             Task.WaitAll(t1, t2);
 
