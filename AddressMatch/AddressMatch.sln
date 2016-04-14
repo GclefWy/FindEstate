@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressMatch", "AddressMatch\AddressMatch.csproj", "{BE72B017-9E1D-4E60-BB93-DAA2B2E04F74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressMatchMain", "AddressMatchMain\AddressMatchMain.csproj", "{AFB997F0-AA6D-4CAF-AEBA-6BCB4F3F94ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BE72B017-9E1D-4E60-BB93-DAA2B2E04F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE72B017-9E1D-4E60-BB93-DAA2B2E04F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE72B017-9E1D-4E60-BB93-DAA2B2E04F74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFB997F0-AA6D-4CAF-AEBA-6BCB4F3F94ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFB997F0-AA6D-4CAF-AEBA-6BCB4F3F94ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFB997F0-AA6D-4CAF-AEBA-6BCB4F3F94ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFB997F0-AA6D-4CAF-AEBA-6BCB4F3F94ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

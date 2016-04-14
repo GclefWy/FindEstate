@@ -16,9 +16,9 @@ using System.Threading;
 
 namespace AddressMatch
 {
-    class Program
+    public class Program
     {
-        static string getHttp(string url, string queryString)
+        public static string getHttp(string url, string queryString)
         {
             //string queryString = "?";
 
@@ -60,17 +60,17 @@ namespace AddressMatch
             return responseContent;
         }
 
-        static string getAddrRoadName(string addr)
+        public static string getAddrRoadName(string addr)
         {
             return Regex.Match(addr, @"(\w*市)*(\w*区)*(?'A'\w*?)(\d+|$)").Success ? Regex.Match(addr, @"(\w*市)*(\w*区)*(?'A'\w*?)(\d+|$)").Result(@"${A}") : "";
         }
 
-        static string getAddrNum(string addr)
+        public static string getAddrNum(string addr)
         {
             return Regex.Match(addr, @"(?'A'\d+)").Success ? Regex.Match(addr, @"(?'A'\d+)").Result(@"${A}") : "";
         }
 
-        static DataSet AddrMatch(string ak, DataSet ds)
+        public static DataSet AddrMatch(string ak, DataSet ds)
         {
             DataSet dst = new DataSet();
             DataTable dt = new DataTable();
