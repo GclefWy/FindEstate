@@ -249,6 +249,9 @@ namespace AddressMatch
                     {
                         dt.Rows.Remove(new_row);
                     }
+
+                    dt.Rows.Add(new_row);
+
                 }
                 catch
                 {
