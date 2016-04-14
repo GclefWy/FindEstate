@@ -70,7 +70,7 @@ namespace AddressMatch
             return Regex.Match(addr, @"(?'A'\d+)").Success ? Regex.Match(addr, @"(?'A'\d+)").Result(@"${A}") : "";
         }
 
-        static DataSet AddrMatch(string ak, DataSet ds)
+        static DataSet AddrMatch(string ak, string city, DataSet ds)
         {
             DataSet dst = new DataSet();
             DataTable dt = new DataTable();
@@ -167,7 +167,7 @@ namespace AddressMatch
                                         Console.WriteLine(unit);
 
                                         string selectURL = "http://172.28.70.31:8080/two/collection1/select";
-                                        string selecttQueryString = "?q=MultiName:" + unit + "&wt=json&indent=true&rows=5&fq=CityName:上海";
+                                        string selecttQueryString = "?q=MultiName:" + unit + "&wt=json&indent=true&rows=5&fq=CityName:"+ city;
 
                                         string rtn3 = getHttp(selectURL, selecttQueryString);
 
@@ -295,7 +295,7 @@ namespace AddressMatch
                         {
                             DataSet ds = new DataSet();
                             adp.Fill(ds);
-                            Console.WriteLine(AddrMatch(ak, ds));
+                            Console.WriteLine(AddrMatch(ak, "上海", ds));
 
                             //for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                             //{
