@@ -75,7 +75,7 @@ namespace AddressMatch
             DataSet dst = new DataSet();
             DataTable dt = new DataTable();
             dst.Tables.Add(dt);
-            dt.Columns.Add("tb_addr_id", typeof(string));
+            dt.Columns.Add("tb_addr_id", typeof(Guid));
             dt.Columns.Add("tb_addr_id_num", typeof(Int32));
             dt.Columns.Add("tb_addr", typeof(string));
             dt.Columns.Add("tb_geocoderAPI", typeof(string));
@@ -96,9 +96,11 @@ namespace AddressMatch
                     DataRow new_row = dt.NewRow();
 
                     string addrID = ds.Tables[0].Rows[i][0].ToString();
+                    string addrIDNum = ds.Tables[0].Rows[i][2].ToString();
                     string addr = ds.Tables[0].Rows[i][1].ToString();
 
                     new_row["tb_addr_id"] = addrID;
+                    new_row["tb_addr_id_num"] = addrIDNum;
                     new_row["tb_addr"] = addr;
 
                     Console.WriteLine("");
@@ -245,17 +247,17 @@ namespace AddressMatch
                         }
                     }
 
-                    if (updateSQL.Length == 0)
+                    if (updateSQL.Length != 0)
                     {
-                        dt.Rows.Remove(new_row);
+                        dt.Rows.Add(new_row);
                     }
 
-                    dt.Rows.Add(new_row);
+                    
 
                 }
-                catch
+                catch(Exception ex)
                 {
-
+                    Console.WriteLine(ex.Message);
                 }
             }
 

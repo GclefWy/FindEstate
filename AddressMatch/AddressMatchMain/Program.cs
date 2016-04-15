@@ -23,77 +23,83 @@ namespace AddressMatchMain
         static void Main(string[] args)
         {
 
+
+
             DataSet DSToT1 = new DataSet();
-            DataSet DSFromT1 = new DataSet();
-
             DataSet DSToT2 = new DataSet();
-            DataSet DSFromT2 = new DataSet();
+            DataSet DSToT3 = new DataSet();
+            DataSet DSToT4 = new DataSet();
+            DataSet DSToT5 = new DataSet();
 
-            string sql1 = "select tb_addr_id,tb_addr from TB_ADDR  with(nolock) where tb_addr_id_num<=10";
+            DataSet DSFromT = new DataSet();
+            //DataSet DSFromT2 = new DataSet();
+
+            string sql1 = "select tb_addr_id,tb_addr,tb_addr_id_num from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num<=60";
              DSToT1 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql1);
 
-            string sql2 = "select tb_addr_id,tb_addr from TB_ADDR  with(nolock) where tb_addr_id_num>100 and tb_addr_id_num<=200";
+            string sql2 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>60 and tb_addr_id_num<=70";
             DSToT2 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql2);
 
+            string sql3 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>70 and tb_addr_id_num<=80";
+            DSToT3 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql3);
+
+            string sql4 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>80 and tb_addr_id_num<=90";
+            DSToT4 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql4);
+
+            string sql5 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>90 and tb_addr_id_num<=100";
+            DSToT5 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql5);
+
+
             Console.WriteLine("===== 异步回调 AsyncInvoke =====");
-
-            DSFromT1 = AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh","上海", DSToT1);
-
-            //AddressMatchHandler AMhandler1 = new AddressMatchHandler(AddressMatch.Program.AddrMatch);
-            //AddressMatchHandler AMhandler2 = new AddressMatchHandler(AddressMatch.Program.AddrMatch);
-
-            //IAsyncResult: 异步操作接口(interface)
-            //BeginInvoke: 委托(delegate)的一个异步方法的开始
-
-            //IAsyncResult th1result = AMhandler.BeginInvoke("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT1, new AsyncCallback(CallBackFun1), "AsycState:OK");
-            //IAsyncResult th2result = AMhandler.BeginInvoke("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT2, new AsyncCallback(CallBackFun2), "AsycState:OK");
-
-            //IAsyncResult th1result = AMhandler1.BeginInvoke("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT1, null, null);
-            //IAsyncResult th2result = AMhandler2.BeginInvoke("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT2, null, null);
-
-            //DSFromT1 = AMhandler1.EndInvoke(th1result);
-            //DSFromT2 = AMhandler2.EndInvoke(th2result);
+           
 
             var t1 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", "上海",DSToT1));
-            var t2 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", "上海",DSToT2));
 
-            Task.WaitAll(t1, t2);
+            //var t2 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("G9cddRpBtdh8gtVMT6gSnS1b9reuCKHs", "上海",DSToT2));
+
+            //var t3 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("HdA7n8YuTHzfdLLYgwWdf4LaZWRgcmeG", "上海", DSToT3));
+            //var t4 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("Y5DStlEzvc0a228OeecY8I3Dqm1CzoZb", "上海", DSToT4));
+            //var t5 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bRbMPYGGgFPNqmxy80rDt3Gh", "上海", DSToT5));
+
+            Console.WriteLine("等待中。。。");
+
+            //Task.WaitAll(t1, t2,t3,t4,t5);
+            Task.WaitAll(t1);
 
 
-            DSFromT1 = t1.Result;
+            DSFromT = t1.Result;
 
-            DSFromT2 = t2.Result;
+            //DSFromT.Merge(t2.Result);
+
+            //DSFromT.Merge(t3.Result);
+
+            //DSFromT.Merge(t4.Result);
+
+            //DSFromT.Merge(t5.Result);
+
+            string tbaddridnumSet = "";
+
+            foreach(DataRow dr in DSFromT.Tables[0].Rows)
+            {
+                tbaddridnumSet += dr[1].ToString() + ",";
+
+            }
+
+            string sqldelete = "delete [TB_ADDR] where tb_addr_id_num in ("+tbaddridnumSet.Substring(0,tbaddridnumSet.Length-1)+")";
+
+            //SimpleDataHelper.Excsql(SimpleDataHelper.MSConnectionString, sqldelete);
+
+            SimpleDataHelper.SqlBCP(SimpleDataHelper.MSConnectionString, DSFromT.Tables[0], "[TB_ADDR_20160415]");
+
 
             Console.WriteLine("继续做别的事情。。。");
-            //异步操作返回
-            //Console.WriteLine(AMhandler.EndInvoke(th1result));
+            
             Console.ReadKey();
 
-            //Thread T1 = new Thread(DSFromT1 = AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT1));
+
         }
 
-        //private delegate DataSet AddressMatchHandler (string ak, DataSet ds);
-
-        //线程回调函数
-        //static void CallBackFun1(IAsyncResult result)
-        //{
-        //    //result 是“加法类.Add()方法”的返回值
-        //    //AsyncResult 是IAsyncResult接口的一个实现类，空间：System.Runtime.Remoting.Messaging
-        //    //AsyncDelegate 属性可以强制转换为用户定义的委托的实际类。
-        //    AddressMatchHandler handler = (AddressMatchHandler)((AsyncResult)result).AsyncDelegate;
-        //    //DSFromT1 = handler.EndInvoke(result);
-        //    Console.WriteLine(result.AsyncState);
-        //}
-
-        //static void CallBackFun2(IAsyncResult result)
-        //{
-        //    //result 是“加法类.Add()方法”的返回值
-        //    //AsyncResult 是IAsyncResult接口的一个实现类，空间：System.Runtime.Remoting.Messaging
-        //    //AsyncDelegate 属性可以强制转换为用户定义的委托的实际类。
-        //    AddressMatchHandler handler = (AddressMatchHandler)((AsyncResult)result).AsyncDelegate;
-        //    //DSFromT1 = handler.EndInvoke(result);
-        //    Console.WriteLine(result.AsyncState);
-        //}
+       
 
 
     }
