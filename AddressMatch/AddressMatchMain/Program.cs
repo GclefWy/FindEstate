@@ -34,19 +34,19 @@ namespace AddressMatchMain
             DataSet DSFromT = new DataSet();
             //DataSet DSFromT2 = new DataSet();
 
-            string sql1 = "select tb_addr_id,tb_addr,tb_addr_id_num from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num<=60";
+            string sql1 = "select tb_addr_id,tb_addr,tb_addr_id_num from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num<=200";
              DSToT1 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql1);
 
-            string sql2 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>60 and tb_addr_id_num<=70";
+            string sql2 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>200 and tb_addr_id_num<=300";
             DSToT2 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql2);
 
-            string sql3 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>70 and tb_addr_id_num<=80";
+            string sql3 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>300 and tb_addr_id_num<=400";
             DSToT3 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql3);
 
-            string sql4 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>80 and tb_addr_id_num<=90";
+            string sql4 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>400 and tb_addr_id_num<=500";
             DSToT4 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql4);
 
-            string sql5 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>90 and tb_addr_id_num<=100";
+            string sql5 = "select tb_addr_id,tb_addr,tb_addr_id_num  from [TB_ADDR_20160415]  with(nolock) where tb_addr_id_num>500 and tb_addr_id_num<=600";
             DSToT5 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql5);
 
 
@@ -87,7 +87,7 @@ namespace AddressMatchMain
 
             string sqldelete = "delete [TB_ADDR] where tb_addr_id_num in ("+tbaddridnumSet.Substring(0,tbaddridnumSet.Length-1)+")";
 
-            //SimpleDataHelper.Excsql(SimpleDataHelper.MSConnectionString, sqldelete);
+            SimpleDataHelper.Excsql(SimpleDataHelper.MSConnectionString, sqldelete);
 
             SimpleDataHelper.SqlBCP(SimpleDataHelper.MSConnectionString, DSFromT.Tables[0], "[TB_ADDR_20160415]");
 
