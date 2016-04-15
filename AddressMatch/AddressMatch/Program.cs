@@ -247,10 +247,9 @@ namespace AddressMatch
                         }
                     }
 
-                    if (updateSQL.Length != 0)
-                    {
+                    
                         dt.Rows.Add(new_row);
-                    }
+                    
 
                     
 
