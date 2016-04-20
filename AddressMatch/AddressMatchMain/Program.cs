@@ -26,15 +26,11 @@ namespace AddressMatchMain
 
 
 
-            DataSet DSToT1 = new DataSet();
-            DataSet DSToT2 = new DataSet();
-            DataSet DSToT3 = new DataSet();
-            DataSet DSToT4 = new DataSet();
-            DataSet DSToT5 = new DataSet();
+            
 
             DataSet DSCount = new DataSet();
 
-            DataSet DSFromT = new DataSet();
+            
 
             string tablename = ConfigurationManager.AppSettings["TableName"].ToString();
 
@@ -53,7 +49,12 @@ namespace AddressMatchMain
             {
                 try
                 {
-                    DSToT1.Clear(); DSToT2.Clear(); DSToT3.Clear(); DSToT4.Clear(); DSToT5.Clear(); DSFromT.Clear();
+                    DataSet DSToT1 = new DataSet();
+                    DataSet DSToT2 = new DataSet();
+                    DataSet DSToT3 = new DataSet();
+                    DataSet DSToT4 = new DataSet();
+                    DataSet DSToT5 = new DataSet();
+                    DataSet DSFromT = new DataSet();
 
                     string addset = (i * 5000).ToString();
 

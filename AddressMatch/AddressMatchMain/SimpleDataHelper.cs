@@ -22,7 +22,7 @@ namespace AddressMatchMain
         /// 查询信息接口用
         /// </summary>
         /// 
-        public static readonly string MSConnectionString = string.Format(connectionStringMS, "DB_RESULT");
+        public static readonly string MSConnectionString = string.Format(connectionStringMS, ConfigurationManager.AppSettings["DataName"]);
 
 
         //查询
