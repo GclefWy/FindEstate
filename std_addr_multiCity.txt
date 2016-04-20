@@ -1,0 +1,23 @@
+select 
+id,
+[DB_RESULT].[dbo].[stnRegexMatch](
+[DB_RESULT].[dbo].[stnRegexMatch](
+[DB_RESULT].[dbo].[stnRegexMatch](
+[DB_RESULT].[dbo].[stnRegexMatch](
+ltrim([live_address])
+,'(\w*省|同上)','')
+,'('+[trade_city]+'(市?))*(?<A>.+)',[trade_city]+'市${A}')
+,'(?<A>\D+\d+\D+)','${A}')
+,'(?<A>\w*(街坊|村|园|城|苑|庭|里))\d+','${A}')
+ as stdAddr
+into new_trade_customer_source2
+from [dbo].[TB_MC_CUSTOMER_TRADE_MULTICITY]
+
+
+select newid() as addr_id, stdAddr as std_addr 
+into TB_STD_ADDR2
+from (
+SELECT distinct stdAddr
+  FROM [DB_RESULT].[dbo].[new_trade_customer_source2]
+where stdAddr<>''
+  ) as z
