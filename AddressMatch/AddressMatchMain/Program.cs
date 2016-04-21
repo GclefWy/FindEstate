@@ -124,7 +124,7 @@ namespace AddressMatchMain
             }
             Console.WriteLine("Job's Done! Press Any Key To Continue...");
 
-            Console.ReadKey();
+            //Console.ReadKey();
 
 
         }
