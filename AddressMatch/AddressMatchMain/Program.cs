@@ -58,32 +58,32 @@ namespace AddressMatchMain
 
                     string addset = (i * 5000).ToString();
 
-                    string sql1 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num from {0}  with(nolock) where tb_addr_id_num>0+{2} and tb_addr_id_num<={1}+1000+{2}-1", tablename, minc.ToString(), addset);
+                    string sql1 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num,city from {0}  with(nolock) where tb_addr_id_num>0+{2} and tb_addr_id_num<={1}+1000+{2}-1", tablename, minc.ToString(), addset);
                     DSToT1 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql1);
 
-                    string sql2 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num  from {0}  with(nolock) where tb_addr_id_num>{1}+1000+{2} and tb_addr_id_num<={1}+2000+{2}-1", tablename, minc.ToString(), addset);
+                    string sql2 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num,city  from {0}  with(nolock) where tb_addr_id_num>{1}+1000+{2} and tb_addr_id_num<={1}+2000+{2}-1", tablename, minc.ToString(), addset);
                     DSToT2 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql2);
 
-                    string sql3 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num  from {0}  with(nolock) where tb_addr_id_num>{1}+2000+{2} and tb_addr_id_num<={1}+3000+{2}-1", tablename, minc.ToString(), addset);
+                    string sql3 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num,city  from {0}  with(nolock) where tb_addr_id_num>{1}+2000+{2} and tb_addr_id_num<={1}+3000+{2}-1", tablename, minc.ToString(), addset);
                     DSToT3 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql3);
 
-                    string sql4 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num  from {0}  with(nolock) where tb_addr_id_num>{1}+3000+{2} and tb_addr_id_num<={1}+4000+{2}-1", tablename, minc.ToString(), addset);
+                    string sql4 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num,city  from {0}  with(nolock) where tb_addr_id_num>{1}+3000+{2} and tb_addr_id_num<={1}+4000+{2}-1", tablename, minc.ToString(), addset);
                     DSToT4 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql4);
 
-                    string sql5 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num  from {0}  with(nolock) where tb_addr_id_num>{1}+4000+{2} and tb_addr_id_num<={1}+5000+{2}-1", tablename, minc.ToString(), addset);
+                    string sql5 = string.Format("select tb_addr_id,tb_addr,tb_addr_id_num,city  from {0}  with(nolock) where tb_addr_id_num>{1}+4000+{2} and tb_addr_id_num<={1}+5000+{2}-1", tablename, minc.ToString(), addset);
                     DSToT5 = SimpleDataHelper.Query(SimpleDataHelper.MSConnectionString, sql5);
 
 
                     //Console.WriteLine("===== 异步回调 AsyncInvoke =====");
 
 
-                    var t1 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", "上海", DSToT1));
+                    var t1 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatchAnyCity("bkVoYqmhhPWZavSf59pYsWgo1kvPGDXh", DSToT1));
 
-                    var t2 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("G9cddRpBtdh8gtVMT6gSnS1b9reuCKHs", "上海", DSToT2));
+                    var t2 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatchAnyCity("G9cddRpBtdh8gtVMT6gSnS1b9reuCKHs", DSToT2));
 
-                    var t3 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("HdA7n8YuTHzfdLLYgwWdf4LaZWRgcmeG", "上海", DSToT3));
-                    var t4 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("Y5DStlEzvc0a228OeecY8I3Dqm1CzoZb", "上海", DSToT4));
-                    var t5 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatch("bRbMPYGGgFPNqmxy80rDt3Gh", "上海", DSToT5));
+                    var t3 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatchAnyCity("HdA7n8YuTHzfdLLYgwWdf4LaZWRgcmeG", DSToT3));
+                    var t4 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatchAnyCity("Y5DStlEzvc0a228OeecY8I3Dqm1CzoZb", DSToT4));
+                    var t5 = Task.Factory.StartNew(() => AddressMatch.Program.AddrMatchAnyCity("8DIvF0UG32dCT30vcKrM8OEik6TjffzC", DSToT5));
 
                     Console.WriteLine("等待中。。。");
 

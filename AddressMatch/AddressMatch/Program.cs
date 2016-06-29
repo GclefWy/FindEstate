@@ -263,6 +263,207 @@ namespace AddressMatch
             return dst;
         }
 
+
+        public static DataSet AddrMatchAnyCity(string ak, DataSet ds)
+        {
+
+
+            DataSet dst = new DataSet();
+            DataTable dt = new DataTable();
+            dst.Tables.Add(dt);
+            dt.Columns.Add("tb_addr_id", typeof(Guid));
+            dt.Columns.Add("tb_addr_id_num", typeof(Int32));
+            dt.Columns.Add("tb_addr", typeof(string));
+            dt.Columns.Add("tb_geocoderAPI", typeof(string));
+            dt.Columns.Add("tb_lat", typeof(float));
+            dt.Columns.Add("tb_lng", typeof(float));
+            dt.Columns.Add("tb_placeAPI", typeof(string));
+            dt.Columns.Add("tb_unit", typeof(string));
+            dt.Columns.Add("tb_unit_confidence", typeof(Int32));
+            dt.Columns.Add("tb_selectAPI", typeof(string));
+            dt.Columns.Add("tb_estate_id", typeof(string));
+            dt.Columns.Add("tb_estate_id_confidence", typeof(Int32));
+            dt.Columns.Add("city", typeof(string));
+
+            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+            {
+                try
+                {
+                    string city = ds.Tables[0].Rows[i]["city"].ToString();
+
+                    string updateSQL = "";
+                    DataRow new_row = dt.NewRow();
+
+                    string addrID = ds.Tables[0].Rows[i][0].ToString();
+                    string addrIDNum = ds.Tables[0].Rows[i][2].ToString();
+                    string addr = ds.Tables[0].Rows[i][1].ToString();
+
+                    new_row["tb_addr_id"] = addrID;
+                    new_row["tb_addr_id_num"] = addrIDNum;
+                    new_row["tb_addr"] = addr;
+
+                    Console.WriteLine("");
+                    Console.WriteLine(addrID + " : " + addr);
+
+                    string geocoderURL = @"http://api.map.baidu.com/geocoder/v2/";
+                    string geocoderQueryString = @"?address=" + addr + "&output=json&ak=" + ak;
+
+                    string rtn = getHttp(geocoderURL, geocoderQueryString);
+
+                    if (rtn.Length > 0)
+                    {
+
+                        JObject jo = JObject.Parse(rtn);
+
+                        if (((int)jo["status"]) == 0)
+                        {
+
+                            string lng = (string)jo["result"]["location"]["lng"];
+                            string lat = (string)jo["result"]["location"]["lat"];
+
+                            Console.WriteLine("lng :" + lng + " , lat : " + lat);
+
+                            int pagesize = 20;
+                            string placeURL = @"http://api.map.baidu.com/place/v2/search";
+                            string placeQueryString = @"?output=json&query=%E5%B0%8F%E5%8C%BA&page_size=" + pagesize.ToString() + "&page_num=0&scope=1&location=" + lat + "," + lng + "&radius=500&ak=" + ak;
+
+                            string rtn2 = getHttp(placeURL, placeQueryString);
+
+                            if (rtn2.Length > 0)
+                            {
+                                JObject jo2 = JObject.Parse(rtn2);
+
+                                if (((int)jo2["status"]) == 0)
+                                {
+
+                                    int total = (int)jo2["total"];
+                                    string unit = "";
+                                    int unitConfidence = 0;
+                                    for (int k = 0; k < (total < pagesize ? total : pagesize); k++)
+                                    {
+                                        if (k == 0)
+                                        {
+                                            unit = (string)jo2["results"][k]["name"];
+                                            unitConfidence = 10;
+                                        }
+                                        if ((Regex.Match((string)jo2["results"][k]["address"], getAddrRoadName(addr)).Success) && (Regex.Match((string)jo2["results"][k]["address"], getAddrNum(addr)).Success))
+                                        {
+                                            unit = (string)jo2["results"][k]["name"];
+                                            unitConfidence = 80;
+                                            break;
+                                        }
+                                    }
+
+                                    updateSQL += "tb_geocoderAPI = '" + rtn + "'";
+                                    new_row["tb_geocoderAPI"] = rtn;
+                                    updateSQL += ",tb_lng=" + lng + ",tb_lat=" + lat;
+                                    new_row["tb_lng"] = lng;
+                                    new_row["tb_lat"] = lat;
+                                    updateSQL += ",tb_placeAPI='" + rtn2 + "'";
+                                    new_row["tb_placeAPI"] = rtn2;
+
+                                    if (unit.Length > 0)
+                                    {
+
+                                        Console.WriteLine(unit);
+
+                                        string selectURL = ConfigurationManager.AppSettings["fullindex"].ToString(); ;
+                                        string selecttQueryString = "?q=MultiName:" + unit + "&wt=json&indent=true&rows=5&fq=City:" + city;
+
+                                        string rtn3 = getHttp(selectURL, selecttQueryString);
+
+                                        if (rtn3.Length > 0)
+                                        {
+
+                                            updateSQL += ",tb_unit='" + unit + "',tb_unit_confidence=" + unitConfidence.ToString();
+                                            new_row["tb_unit"] = unit;
+                                            new_row["tb_unit_confidence"] = unitConfidence;
+                                            updateSQL += ",tb_selectAPI='" + rtn3 + "'";
+                                            new_row["tb_selectAPI"] = rtn3;
+
+                                            JObject jo3 = JObject.Parse(rtn3);
+
+                                            int rows = (int)jo3["responseHeader"]["params"]["rows"];
+                                            string EstateID = "";
+                                            int EstateIDConfidence = 0;
+                                            try
+                                            {
+                                                for (int j = 0; j < rows; j++)
+                                                {
+                                                    if (j == 0)
+                                                    {
+                                                        EstateID = (string)jo3["response"]["docs"][j]["EstateID"];
+                                                        EstateIDConfidence = 10;
+                                                    }
+                                                    if ((Regex.Match((string)jo3["response"]["docs"][j]["EstateName"], unit).Success) || ((Regex.Match((string)jo3["response"]["docs"][j]["Address"], getAddrRoadName(addr)).Success) && (Regex.Match((string)jo3["response"]["docs"][j]["Address"], getAddrNum(addr)).Success)))
+                                                    {
+                                                        EstateID = (string)jo3["response"]["docs"][j]["EstateID"];
+                                                        EstateIDConfidence = 80;
+
+
+                                                        break;
+                                                    }
+
+                                                }
+
+                                                if (EstateID.Length > 0)
+                                                {
+                                                    updateSQL += ",tb_estate_id='" + EstateID + "', tb_estate_id_confidence=" + EstateIDConfidence.ToString();
+                                                    new_row["tb_estate_id"] = EstateID;
+                                                    new_row["tb_estate_id_confidence"] = EstateIDConfidence;
+
+                                                    Console.WriteLine(EstateID);
+
+                                                }
+
+                                            }
+                                            catch
+                                            {
+
+                                            }
+                                        }
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("get placeURL fail : " + rtn2);
+                                    if (((int)jo["status"]) == 302)
+                                    {
+                                        Thread.Sleep(30 * 60 * 1000);
+                                    }
+
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("get geocoderURL fail : " + rtn);
+                            if (((int)jo["status"]) == 302)
+                            {
+                                Thread.Sleep(30 * 60 * 1000);
+                            }
+                        }
+                    }
+
+                    new_row["city"] = city;
+                    dt.Rows.Add(new_row);
+
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            return dst;
+        }
+
+
+
         static void Main(string[] args)
         {
             string SConnDestination = ConfigurationManager.ConnectionStrings["SourceDBConn"].ConnectionString;
